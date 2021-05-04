@@ -21,9 +21,6 @@ export const addRolesFromInvite = () => (
       ),
     ),
 
-    // Add a bit of delay
-    RxO.delay(1000),
-
     // Add the roles to the member
     RxO.flatMap(([member, roles]) =>
       member.roles.add(roles).then(() => F.tuple(member, roles)),
