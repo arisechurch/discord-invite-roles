@@ -3,7 +3,7 @@ import * as DR from "./rxjs";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
 
-export const watch$ = (c: Client) =>
+export const watchInvites$ = (c: Client) =>
   Rx.merge(
     DR.fromEvent(c)("guildCreate").pipe(RxO.map(([guild]) => guild)),
     DR.fromEvent(c)("inviteCreate").pipe(

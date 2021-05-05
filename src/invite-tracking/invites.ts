@@ -6,7 +6,9 @@ import * as Guilds from "../discord/guilds";
 import * as DR from "../discord/rxjs";
 import * as IT from "./invite-tracker";
 
-const memberAdded = (tracker: IT.InviteTracker) => (member: GuildMember) => {
+const memberUsedInvite = (tracker: IT.InviteTracker) => (
+  member: GuildMember,
+) => {
   const before = tracker.value[member.guild.id];
 
   return tracker.next(IT.updateGuild(member.guild)).then(() => {
@@ -22,17 +24,18 @@ const memberAdded = (tracker: IT.InviteTracker) => (member: GuildMember) => {
   });
 };
 
-export const stream$ = (client: Client) => {
+export const used$ = (client: Client) => {
   const inviteTracker = new IT.InviteTracker();
-  const memberAddedAction = memberAdded(inviteTracker);
   inviteTracker.next(IT.init(client));
 
-  Guilds.watch$(client).subscribe((guild) => {
+  Guilds.watchInvites$(client).subscribe((guild) => {
     inviteTracker.next(IT.updateGuild(guild));
   });
 
   return DR.fromEvent(client)("guildMemberAdd").pipe(
-    RxO.flatMap(([member]) => Rx.zip(Rx.of(member), memberAddedAction(member))),
+    RxO.flatMap(([member]) =>
+      Rx.zip(Rx.of(member), memberUsedInvite(inviteTracker)(member)),
+    ),
     RxO.filter(([_, invites]) => invites.length === 1),
     RxO.map(([member, invites]) => F.tuple(member, invites[0])),
   );
