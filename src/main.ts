@@ -10,13 +10,7 @@ import * as K8s from "./k8s";
 async function main() {
   const shardConfig = F.pipe(
     K8s.shardConfig(),
-    O.fold(
-      () => ({}),
-      ({ id, count }) => ({
-        shards: id,
-        shardCount: count,
-      }),
-    ),
+    O.getOrElse(() => ({})),
   );
 
   console.log("Using shard config:", shardConfig);
