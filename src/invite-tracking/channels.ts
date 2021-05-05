@@ -1,7 +1,6 @@
 import {
   GuildChannel,
   GuildChannelManager,
-  NewsChannel,
   Role,
   RoleManager,
   TextChannel,
@@ -9,12 +8,12 @@ import {
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 
-export const isText = (c: GuildChannel): c is TextChannel | NewsChannel =>
-  c.isText();
+export const isText = (c: GuildChannel): c is TextChannel => c.isText();
 
-export const roles = (channels: GuildChannelManager, roles: RoleManager) => (
-  channelId: string,
-) =>
+export const rolesFromTopic = (
+  channels: GuildChannelManager,
+  roles: RoleManager,
+) => (channelId: string) =>
   F.pipe(
     O.fromNullable(channels.cache.get(channelId)),
     O.filter(isText),

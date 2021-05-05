@@ -13,7 +13,10 @@ export const addRolesFromInvite = () => (
     // Get the roles from the invite
     RxO.flatMap(([member, { channel }]) =>
       F.pipe(
-        Channels.roles(member.guild.channels, member.guild.roles)(channel),
+        Channels.rolesFromTopic(
+          member.guild.channels,
+          member.guild.roles,
+        )(channel),
         O.fold(
           () => Rx.EMPTY,
           (roles) => Rx.of(F.tuple(member, roles)),
