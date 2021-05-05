@@ -17,8 +17,10 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+COPY package.json yarn.lock ./
+RUN yarn install --production
+
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S app -u 1001
