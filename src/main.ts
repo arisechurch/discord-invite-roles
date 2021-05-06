@@ -13,7 +13,7 @@ async function main() {
     O.getOrElse(() => ({})),
   );
 
-  console.log("Using shard config:", shardConfig);
+  console.log("[main]", "Using shard config:", shardConfig);
 
   const client = new Client({
     ...shardConfig,
@@ -23,6 +23,7 @@ async function main() {
     .pipe(IR.addRolesFromInvite())
     .subscribe(([member, roles]) => {
       console.log(
+        "[main]",
         `${member.displayName} added to roles ${roles
           .map((r) => r.name)
           .join(", ")}`,

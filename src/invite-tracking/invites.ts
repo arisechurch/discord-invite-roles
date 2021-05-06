@@ -38,7 +38,13 @@ export const used$ = (client: Client) => {
   inviteTracker.next(IT.init(client));
 
   Guilds.watchInvites$(client).subscribe((guild) => {
+    console.log("[invites]", "updating guild", guild.name);
     inviteTracker.next(IT.updateGuild(guild));
+  });
+
+  DR.fromEvent(client)("guildDelete").subscribe(([guild]) => {
+    console.log("[invites]", "added to guild", guild.name);
+    inviteTracker.next(IT.removeGuild(guild));
   });
 
   return DR.fromEvent(client)("guildMemberAdd").pipe(

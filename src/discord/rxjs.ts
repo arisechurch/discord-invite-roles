@@ -4,7 +4,7 @@ import * as Eq from "fp-ts/Eq";
 import * as Rx from "rxjs";
 
 function listen$<K extends keyof ClientEvents>(c: Client, event: K) {
-  console.log("listening to", event);
+  console.log("[rxjs]", "listening to", event);
   return Rx.fromEvent(c, event, (...args) => args as ClientEvents[K]);
 }
 
