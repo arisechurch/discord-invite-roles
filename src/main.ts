@@ -24,6 +24,7 @@ async function main() {
     .subscribe(([member, roles]) => {
       console.log(
         "[main]",
+        `${member.guild.name} (${member.guild.id})`,
         `${member.displayName} added to roles ${roles
           .map((r) => r.name)
           .join(", ")}`,
