@@ -1,4 +1,5 @@
-import { Client, GuildMember } from "discord.js";
+import { GatewayGuildMemberAddDispatchData } from "discord-api-types";
+import { Client, Events } from "droff";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as O from "fp-ts/Option";
@@ -6,7 +7,6 @@ import { List } from "immutable";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
 import * as Guilds from "../discord/guilds";
-import * as DR from "../discord/rxjs";
 import * as IT from "./invite-tracker";
 
 const usedInvites = (before: IT.TInviteMap, after: IT.TInviteMap) => {
@@ -17,13 +17,13 @@ const usedInvites = (before: IT.TInviteMap, after: IT.TInviteMap) => {
   }, List<IT.TInviteSummary>());
 };
 
-const memberUsedInvite = (tracker: IT.InviteTracker) => (
-  member: GuildMember,
+const memberUsedInvite = (client: Client) => (tracker: IT.InviteTracker) => (
+  member: GatewayGuildMemberAddDispatchData,
 ): Promise<List<IT.TInviteSummary>> => {
-  const before = O.fromNullable(tracker.value.get(member.guild.id));
+  const before = O.fromNullable(tracker.value.get(member.guild_id));
 
-  return tracker.next(IT.updateGuild(member.guild)).then(() => {
-    const after = O.fromNullable(tracker.value.get(member.guild.id));
+  return tracker.next(IT.updateGuild(client)(member.guild_id)).then(() => {
+    const after = O.fromNullable(tracker.value.get(member.guild_id));
 
     return F.pipe(
       sequenceT(O.option)(before, after),
@@ -35,21 +35,21 @@ const memberUsedInvite = (tracker: IT.InviteTracker) => (
 
 export const used$ = (client: Client) => {
   const inviteTracker = new IT.InviteTracker();
-  inviteTracker.next(IT.init(client));
+  // inviteTracker.next(IT.init(client));
 
   Guilds.watchInvites$(client).subscribe((guild) => {
     console.log("[invites]", "updating guild", guild.name);
-    inviteTracker.next(IT.updateGuild(guild));
+    inviteTracker.next(IT.updateGuild(client)(guild.id));
   });
 
-  DR.fromEvent(client)("guildDelete").subscribe(([guild]) => {
-    console.log("[invites]", "added to guild", guild.name);
-    inviteTracker.next(IT.removeGuild(guild));
+  client.dispatch$(Events.GuildDelete).subscribe((guild) => {
+    console.log("[invites]", "removing guild", guild.id);
+    inviteTracker.next(IT.removeGuild(guild.id));
   });
 
-  return DR.fromEvent(client)("guildMemberAdd").pipe(
-    RxO.flatMap(([member]) =>
-      Rx.zip(Rx.of(member), memberUsedInvite(inviteTracker)(member)),
+  return client.dispatch$(Events.GuildMemberAdd).pipe(
+    RxO.flatMap((member) =>
+      Rx.zip(Rx.of(member), memberUsedInvite(client)(inviteTracker)(member)),
     ),
     RxO.filter(([_, invites]) => invites.count() === 1),
     RxO.map(([member, invites]) => F.tuple(member, invites.get(0)!)),

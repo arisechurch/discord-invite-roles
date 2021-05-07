@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import { Client } from "discord.js";
+import { createClient, Intents } from "droff";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 import * as IR from "./invite-tracking/invite-roles";
@@ -15,23 +15,22 @@ async function main() {
 
   console.log("[main]", "Using shard config:", shardConfig);
 
-  const client = new Client({
+  const client = createClient({
     ...shardConfig,
+    token: process.env.DISCORD_BOT_TOKEN!,
+    intents: Intents.GUILDS | Intents.GUILD_MEMBERS | Intents.GUILD_INVITES,
   });
 
   Invites.used$(client)
-    .pipe(IR.addRolesFromInvite())
-    .subscribe(([member, roles]) => {
+    .pipe(IR.addRolesFromInvite(client))
+    .subscribe(([member, role]) => {
+      const guild = client.guilds$.value.get(member.guild_id)!;
       console.log(
         "[main]",
-        `${member.guild.name} (${member.guild.id})`,
-        `${member.displayName} added to roles ${roles
-          .map((r) => r.name)
-          .join(", ")}`,
+        `${guild.name} (${guild.id})`,
+        `${member.user!.username} added to role ${role.name}`,
       );
     });
-
-  await client.login(process.env.DISCORD_BOT_TOKEN);
 }
 
 main();

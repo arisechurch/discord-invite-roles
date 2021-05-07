@@ -31,7 +31,7 @@ export const shardConfig = () =>
       const shardCount = replicas * perPod;
 
       return {
-        shards: [...Array(perPod).keys()].map((n) => startIndex + n),
+        shardIDs: [...Array(perPod).keys()].map((n) => startIndex + n),
         shardCount,
       };
     }),

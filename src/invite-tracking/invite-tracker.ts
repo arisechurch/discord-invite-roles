@@ -1,10 +1,10 @@
 import { Bloc } from "@bloc-js/bloc";
+import { Snowflake } from "discord-api-types";
+import { Client } from "droff";
 import * as F from "fp-ts/function";
-import { Client, Guild } from "discord.js";
 import { Map } from "immutable";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
-import * as DR from "../discord/rxjs";
 
 export type TInviteSummary = {
   code: string;
@@ -20,38 +20,29 @@ export type Action = (
   next: (s: State) => void,
 ) => Promise<void>;
 
-export const init = (c: Client): Action => (b, next) =>
-  DR.ready(c)
-    .pipe(
-      RxO.delay(1000),
-      RxO.flatMap(() => c.guilds.cache.values()),
-      RxO.tap((guild) => {
-        console.log("[invite tracker]", "[init]", "adding guild", guild.name);
-      }),
-      RxO.flatMap((guild) => updateGuild(guild)(b, next)),
-    )
-    .toPromise();
-
-export const updateGuild = (guild: Guild): Action => (b, next) => {
+export const updateGuild = (c: Client) => (guildID: Snowflake): Action => (
+  b,
+  next,
+) => {
   return F.pipe(
-    Rx.from(guild.fetchInvites()),
-    RxO.flatMap((invites) => invites.values()),
+    Rx.from(c.getGuildInvites([guildID])),
+    RxO.flatMap((invites) => invites),
     RxO.reduce(
       (acc, invite) =>
         acc.set(invite.code, {
           code: invite.code,
-          uses: invite.uses || 0,
+          uses: invite.uses,
           channel: invite.channel.id,
         }),
       Map() as TInviteMap,
     ),
     (o) => Rx.lastValueFrom(o),
-  ).then((invites) => next(b.value.set(guild.id, invites)));
+  ).then((invites) => next(b.value.set(guildID, invites)));
 };
 
-export const removeGuild = (guild: Guild): Action => async (b, next) => {
-  console.log("[Invite tracker]", "[removeGuild]", guild.name);
-  return next(b.value.delete(guild.id));
+export const removeGuild = (guildID: Snowflake): Action => async (b, next) => {
+  console.log("[Invite tracker]", "[removeGuild]", guildID);
+  return next(b.value.delete(guildID));
 };
 
 export class InviteTracker extends Bloc<State> {
