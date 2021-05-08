@@ -20,9 +20,9 @@ ENV NODE_ENV production
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S app -u 1001
-RUN chown -R app:nodejs /app/dist
-USER app
+# RUN addgroup -g 1001 -S nodejs
+# RUN adduser -S app -u 1001
+# RUN chown -R app:nodejs /app/dist
+# USER app
 
 CMD ["node", "dist/main.js"]
