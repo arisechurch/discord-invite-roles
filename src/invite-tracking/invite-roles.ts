@@ -1,20 +1,21 @@
-import { GatewayGuildMemberAddDispatchData, Routes } from "discord-api-types";
+import { GatewayGuildMemberAddDispatchData } from "discord-api-types";
 import { Client } from "droff";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
+import * as Members from "../discord/members";
 import * as Channels from "./channels";
 import * as IT from "./invite-tracker";
-import * as Members from "../discord/members";
 
 export const addRolesFromInvite = (c: Client) => (
   input$: Rx.Observable<[GatewayGuildMemberAddDispatchData, IT.TInviteSummary]>,
 ) =>
   input$.pipe(
-    RxO.flatMap(([member, invite]) =>
+    RxO.withLatestFrom(c.guilds$),
+    RxO.flatMap(([[member, invite], guilds]) =>
       F.pipe(
-        Members.guild(c)(member),
+        Members.guild(guilds)(member),
         O.fold(
           () => Rx.EMPTY,
           (guild) => Rx.of(F.tuple(member, invite, guild)),

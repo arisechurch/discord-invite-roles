@@ -6,6 +6,7 @@ import * as O from "fp-ts/Option";
 import * as IR from "./invite-tracking/invite-roles";
 import * as Invites from "./invite-tracking/invites";
 import * as K8s from "./k8s";
+import * as RxO from "rxjs/operators";
 
 async function main() {
   const shardConfig = F.pipe(
@@ -22,9 +23,9 @@ async function main() {
   });
 
   Invites.used$(client)
-    .pipe(IR.addRolesFromInvite(client))
-    .subscribe(([member, role]) => {
-      const guild = client.guilds$.value.get(member.guild_id)!;
+    .pipe(IR.addRolesFromInvite(client), RxO.withLatestFrom(client.guilds$))
+    .subscribe(([[member, role], guilds]) => {
+      const guild = guilds.get(member.guild_id)!;
       console.log(
         "[main]",
         `${guild.name} (${guild.id})`,
