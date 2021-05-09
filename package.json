@@ -18,7 +18,7 @@
     "bufferutil": "^4.0.3",
     "discord-api-types": "^0.18.1",
     "dotenv": "^8.2.0",
-    "droff": "^0.3.0",
+    "droff": "^0.3.3",
     "fp-ts": "^2.10.5",
     "fp-ts-std": "^0.10.0",
     "immutable": "^4.0.0-rc.12",
