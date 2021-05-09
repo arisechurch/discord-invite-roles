@@ -284,9 +284,9 @@ dotenv@^8.2.0:
   integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
 
 droff@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.3.3.tgz#93cf880e788bb2e583c5dd4a6dc6cdce1bd84c91"
-  integrity sha512-O5Z4RTZ1kZ8GX48oKEM0FISqzjDXIeiSwyOvG1OdvpTLn1/dZdVOZ3cHFx03Yz+H1JfP3hDD+kvxJVSvrbERQQ==
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.3.4.tgz#fca0fbddf850808244856070aaee1213f7b49433"
+  integrity sha512-MWcxDAdqPCYIDxtLv+tWAMDFsfK3hikxifVsiHK9XBW8cbPw1swCcUXO5hEruHjoQKfQxk0pkYNZd7aMevfiFQ==
   dependencies:
     axios "^0.21.1"
     erlpack "^0.1.3"
@@ -352,9 +352,9 @@ fill-range@^7.0.1:
     to-regex-range "^5.0.1"
 
 follow-redirects@^1.10.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.0.tgz#f5d260f95c5f8c105894491feee5dc8993b402fe"
-  integrity sha512-0vRwd7RKQBTt+mgu87mtYeofLFZpTas2S9zY+jIeuLJMNvudIgF52nr19q40HOwH5RrhWIPuj9puybzSJiRrVg==
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
 
 fp-ts-std@^0.10.0:
   version "0.10.0"
@@ -689,9 +689,9 @@ prepend-http@^2.0.0:
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
 prettier@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
-  integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.0.tgz#b6a5bf1284026ae640f17f7ff5658a7567fc0d18"
+  integrity sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==
 
 pstree.remy@^1.1.7:
   version "1.1.8"
