@@ -9,6 +9,7 @@ const guildFromInvite = (c: Client) => (
   invite: Pick<GatewayInviteCreateDispatchData, "guild_id">,
 ) =>
   c.guilds$.pipe(
+    RxO.take(1),
     RxO.flatMap((guilds) =>
       F.pipe(
         O.fromNullable(invite.guild_id),
