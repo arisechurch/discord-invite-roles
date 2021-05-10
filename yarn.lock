@@ -284,9 +284,9 @@ dotenv@^8.2.0:
   integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
 
 droff@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.4.0.tgz#308de372dadfd8d66f54e8e6fb5e1cff58bbc17a"
-  integrity sha512-6qmUD2OzNfqRROltsb87+I4JlWslUn0tMQdi3kTp0vpUnmPlPDY085Ny+Q9/BAYkRp9Pnlg+9I1RqGZGQ6ButA==
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.4.2.tgz#73ab31628d3c6824121190483bdf1d1d45c3907e"
+  integrity sha512-7Tt1xhP443msMCyTt2nhGz1n5j6/d9xzw9xjiqfJFuF6R6+AELmk3HeVezhfRyYg07WuUCunl8Enk/R8bkqSLg==
   dependencies:
     axios "^0.21.1"
     erlpack "^0.1.3"
