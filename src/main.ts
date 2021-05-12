@@ -3,11 +3,11 @@ require("dotenv").config();
 import { createClient, Intents } from "droff";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
+import * as Rx from "rxjs";
+import * as RxO from "rxjs/operators";
 import * as IR from "./invite-tracking/invite-roles";
 import * as Invites from "./invite-tracking/invites";
 import * as K8s from "./k8s";
-import * as RxO from "rxjs/operators";
-import * as Rx from "rxjs";
 
 async function main() {
   const shardConfig = F.pipe(
