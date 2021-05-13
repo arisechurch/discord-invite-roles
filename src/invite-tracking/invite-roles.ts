@@ -15,12 +15,16 @@ export const addRolesFromInvite =
     >,
   ) =>
     input$.pipe(
-      c.withLatest(([member]) => member.guild_id),
+      c.withLatest({
+        channels: c.channels$,
+        roles: c.roles$,
+      })(([member]) => member.guild_id),
+      c.onlyWithGuild(),
 
       // Get the roles from the invite
-      RxO.flatMap(([[member, { channel }], guildCtx]) =>
+      RxO.flatMap(([[member, { channel }], { channels, roles }]) =>
         F.pipe(
-          Channels.rolesFromTopic(guildCtx!.channels, guildCtx!.roles)(channel),
+          Channels.rolesFromTopic(channels, roles)(channel),
           O.fold(
             () => Rx.EMPTY,
             (roles) => Rx.combineLatest(Rx.of(member), roles),
