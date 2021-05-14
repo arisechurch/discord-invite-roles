@@ -17,25 +17,27 @@ const usedInvites = (before: IT.TInviteMap, after: IT.TInviteMap) => {
   }, List<IT.TInviteSummary>());
 };
 
-const memberUsedInvite = (client: Client) => (tracker: IT.InviteTracker) => (
-  member: GatewayGuildMemberAddDispatchData,
-): Promise<List<IT.TInviteSummary>> => {
-  const before = O.fromNullable(tracker.value.get(member.guild_id));
+const memberUsedInvite =
+  (client: Client) =>
+  (tracker: IT.InviteTracker) =>
+  async (
+    member: GatewayGuildMemberAddDispatchData,
+  ): Promise<List<IT.TInviteSummary>> => {
+    const before = O.fromNullable(tracker.value.get(member.guild_id));
 
-  return tracker.next(IT.updateGuild(client)(member.guild_id)).then(() => {
-    const after = O.fromNullable(tracker.value.get(member.guild_id));
+    return tracker.next(IT.updateGuild(client)(member.guild_id)).then(() => {
+      const after = O.fromNullable(tracker.value.get(member.guild_id));
 
-    return F.pipe(
-      sequenceT(O.option)(before, after),
-      O.map(([before, after]) => usedInvites(before, after)),
-      O.getOrElse(() => List()),
-    );
-  });
-};
+      return F.pipe(
+        sequenceT(O.Apply)(before, after),
+        O.map(([before, after]) => usedInvites(before, after)),
+        O.getOrElse(() => List()),
+      );
+    });
+  };
 
 export const used$ = (client: Client) => {
   const inviteTracker = new IT.InviteTracker();
-  // inviteTracker.next(IT.init(client));
 
   Guilds.watchInvites$(client).subscribe((guild) => {
     console.log("[invites]", "updating guild", guild.name);

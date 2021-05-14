@@ -15,7 +15,7 @@ export const addRolesFromInvite =
     >,
   ) =>
     input$.pipe(
-      c.withLatest({
+      c.withCaches({
         channels: c.channels$,
         roles: c.roles$,
       })(([member]) => member.guild_id),
@@ -27,7 +27,7 @@ export const addRolesFromInvite =
           Channels.rolesFromTopic(channels, roles)(channel),
           O.fold(
             () => Rx.EMPTY,
-            (roles) => Rx.combineLatest(Rx.of(member), roles),
+            (roles) => Rx.combineLatest([Rx.of(member), roles]),
           ),
         ),
       ),
