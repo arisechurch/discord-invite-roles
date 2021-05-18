@@ -283,10 +283,10 @@ dotenv@^8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.6.0.tgz#061af664d19f7f4d8fc6e4ff9b584ce237adcb8b"
   integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
 
-droff@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.8.0.tgz#d1527cd8c23fcdb6c7d63a6ee37a5bd388826f97"
-  integrity sha512-ygR+1489J24+PWDKE+Vc0yzRDn3/Wqe74d36K0xo840jT35XLf2uQtbvqzr2+XUbq3dFj+4bSffyoxo/SUe0EA==
+droff@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.8.1.tgz#ac6e34dd2510e5b769297b21787e00b7202d1f93"
+  integrity sha512-0hxUTm6fNQmamdJ3ufHyv1ylN0ikexj7lE6D6TY43u8mf6ItvVP1VlsBprex3yZxceywAim7Ici9pt4oCzU1NA==
   dependencies:
     axios "^0.21.1"
     erlpack "^0.1.3"
