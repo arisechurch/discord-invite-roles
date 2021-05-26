@@ -1,5 +1,5 @@
-import { GatewayGuildMemberAddDispatchData } from "discord-api-types";
-import { Client, Events } from "droff";
+import { Client } from "droff";
+import { GuildMemberAddEvent } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as O from "fp-ts/Option";
@@ -20,9 +20,7 @@ const usedInvites = (before: IT.TInviteMap, after: IT.TInviteMap) => {
 const memberUsedInvite =
   (client: Client) =>
   (tracker: IT.InviteTracker) =>
-  async (
-    member: GatewayGuildMemberAddDispatchData,
-  ): Promise<List<IT.TInviteSummary>> => {
+  async (member: GuildMemberAddEvent): Promise<List<IT.TInviteSummary>> => {
     const before = O.fromNullable(tracker.value.get(member.guild_id));
 
     return tracker.next(IT.updateGuild(client)(member.guild_id)).then(() => {
@@ -44,12 +42,12 @@ export const used$ = (client: Client) => {
     inviteTracker.next(IT.updateGuild(client)(guild.id));
   });
 
-  client.dispatch$(Events.GuildDelete).subscribe((guild) => {
+  client.dispatch$("GUILD_DELETE").subscribe((guild) => {
     console.log("[invites]", "removing guild", guild.id);
     inviteTracker.next(IT.removeGuild(guild.id));
   });
 
-  return client.dispatch$(Events.GuildMemberAdd).pipe(
+  return client.dispatch$("GUILD_MEMBER_ADD").pipe(
     RxO.flatMap((member) =>
       Rx.zip(Rx.of(member), memberUsedInvite(client)(inviteTracker)(member)),
     ),

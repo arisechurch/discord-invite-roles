@@ -266,11 +266,6 @@ diff@^4.0.1:
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
-discord-api-types@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.18.1.tgz#5d08ed1263236be9c21a22065d0e6b51f790f492"
-  integrity sha512-hNC38R9ZF4uaujaZQtQfm5CdQO58uhdkoHQAVvMfIL0LgOSZeW575W8H6upngQOuoxWd8tiRII3LLJm9zuQKYg==
-
 dot-prop@^5.2.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-5.3.0.tgz#90ccce708cd9cd82cc4dc8c3ddd9abdd55b20e88"
@@ -283,10 +278,10 @@ dotenv@^8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.6.0.tgz#061af664d19f7f4d8fc6e4ff9b584ce237adcb8b"
   integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
 
-droff@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.8.1.tgz#ac6e34dd2510e5b769297b21787e00b7202d1f93"
-  integrity sha512-0hxUTm6fNQmamdJ3ufHyv1ylN0ikexj7lE6D6TY43u8mf6ItvVP1VlsBprex3yZxceywAim7Ici9pt4oCzU1NA==
+droff@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.9.0.tgz#877190c80620e424f17b6ce9867a8c14e173b2ff"
+  integrity sha512-VZVfSAfxuHLaM4ZZLvRfIA1q0RI909dOsI92klCzsp9UDp+QOi296JdbeM/FvjMLt8ueL2xYCawEWve4ctdobA==
   dependencies:
     axios "^0.21.1"
     erlpack "^0.1.3"

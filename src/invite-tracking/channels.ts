@@ -1,10 +1,10 @@
-import { APIChannel, APIRole, Snowflake } from "discord-api-types";
 import { SnowflakeMap } from "droff/dist/gateway-utils/resources";
+import { Channel, Role, Snowflake } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 
 export const rolesFromTopic =
-  (channels: SnowflakeMap<APIChannel>, roles: SnowflakeMap<APIRole>) =>
+  (channels: SnowflakeMap<Channel>, roles: SnowflakeMap<Role>) =>
   (channelId: string) =>
     F.pipe(
       O.fromNullable(channels.get(channelId as Snowflake)),
@@ -17,6 +17,6 @@ export const rolesFromTopic =
             .map((name) =>
               roles.find((r) => r.name.toLowerCase() === name.toLowerCase()),
             )
-            .filter((r) => !!r) as APIRole[],
+            .filter((r) => !!r) as Role[],
       ),
     );

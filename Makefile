@@ -1,6 +1,6 @@
 .PHONY: tsc
 tsc: clean
-	tsc
+	./node_modules/.bin/tsc
 
 .PHONY: clean
 clean:
