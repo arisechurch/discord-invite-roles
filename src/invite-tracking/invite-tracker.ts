@@ -23,11 +23,12 @@ export type Action = (
 export const updateGuild =
   (c: Client) =>
   (guildID: Snowflake): Action =>
-  (b, next) => {
-    return F.pipe(
+  (b, next) =>
+    F.pipe(
       Rx.from(
         c.getGuildInvites(guildID) as Promise<(Invite & InviteMetadatum)[]>,
       ),
+      RxO.catchError(() => []),
       RxO.flatMap((invites) => invites),
       RxO.reduce(
         (acc, invite) =>
@@ -40,7 +41,6 @@ export const updateGuild =
       ),
       (o) => Rx.lastValueFrom(o),
     ).then((invites) => next(b.value.set(guildID, invites)));
-  };
 
 export const removeGuild =
   (guildID: Snowflake): Action =>
