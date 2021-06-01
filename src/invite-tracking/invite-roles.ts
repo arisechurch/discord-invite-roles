@@ -11,16 +11,18 @@ export const addRolesFromInvite =
   (c: Client) =>
   (input$: Rx.Observable<[GuildMemberAddEvent, IT.TInviteSummary]>) =>
     input$.pipe(
-      c.withCaches({
-        channels: c.channels$,
-        roles: c.roles$,
-      })(([member]) => member.guild_id),
-      c.onlyWithGuild(),
+      RxO.flatMap(([member, invite]) =>
+        Rx.zip(
+          Rx.of(member),
+          c.getGuildRoles(member.guild_id),
+          c.getChannel(invite.channel),
+        ),
+      ),
 
       // Get the roles from the invite
-      RxO.flatMap(([[member, { channel }], { channels, roles }]) =>
+      RxO.flatMap(([member, roles, channel]) =>
         F.pipe(
-          Channels.rolesFromTopic(channels, roles)(channel),
+          Channels.rolesFromTopic(roles)(channel),
           O.fold(
             () => Rx.EMPTY,
             (roles) => Rx.combineLatest([Rx.of(member), roles]),
