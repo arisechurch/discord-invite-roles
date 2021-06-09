@@ -1,40 +1,46 @@
 import { Client } from "droff";
-import { GuildMemberAddEvent } from "droff/dist/types";
+import { GuildMemberAddEvent, Role } from "droff/dist/types";
 import * as F from "fp-ts/function";
-import * as O from "fp-ts/Option";
-import * as Rx from "rxjs";
-import * as RxO from "rxjs/operators";
+import { sequenceT } from "fp-ts/lib/Apply";
+import * as TE from "fp-ts/TaskEither";
 import * as Channels from "./channels";
 import * as IT from "./invite-tracker";
 
 export const addRolesFromInvite =
-  (c: Client) =>
-  (input$: Rx.Observable<[GuildMemberAddEvent, IT.TInviteSummary]>) =>
-    input$.pipe(
-      RxO.flatMap(([member, invite]) =>
-        Rx.zip(
-          Rx.of(member),
-          Rx.of(invite),
-          c.getGuildRoles(member.guild_id),
-          c.getGuildChannels(member.guild_id),
+  (c: Client) => (member: GuildMemberAddEvent, invite: IT.TInviteSummary) =>
+    F.pipe(
+      sequenceT(TE.ApplyPar)(
+        TE.tryCatch(
+          () => c.getGuildRoles(member.guild_id),
+          () => `Could not get roles for guild (${member.guild_id})`,
+        ),
+        TE.tryCatch(
+          () => c.getGuildChannels(member.guild_id),
+          () => `Could not get roles for guild (${member.guild_id})`,
         ),
       ),
 
-      // Get the roles from the invite
-      RxO.flatMap(([member, { channel }, roles, channels]) =>
-        F.pipe(
-          Channels.rolesFromTopic(channels, roles)(channel),
-          O.fold(
-            () => Rx.EMPTY,
-            (roles) => Rx.combineLatest([Rx.of(member), roles]),
+      TE.chain(
+        F.flow(
+          ([roles, channels]) =>
+            Channels.rolesFromTopic(channels, roles)(invite.channel),
+          TE.fromOption(() => "Could not extract roles from channel topic"),
+        ),
+      ),
+
+      TE.chain(addRoles(c)(member)),
+    );
+
+const addRoles =
+  (c: Client) => (member: GuildMemberAddEvent) => (roles: Role[]) =>
+    TE.tryCatch(
+      () =>
+        Promise.all(
+          roles.map((role) =>
+            c
+              .addGuildMemberRole(member.guild_id, member.user!.id, role.id)
+              .then(() => [member, role] as const),
           ),
         ),
-      ),
-
-      // Add the roles to the member
-      RxO.flatMap(([member, role]) =>
-        c
-          .addGuildMemberRole(member.guild_id, member.user!.id, role.id)
-          .then(() => F.tuple(member, role)),
-      ),
+      (err) => `Could not add roles to member: ${err}`,
     );

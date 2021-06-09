@@ -24,7 +24,7 @@ export const shardsPerPod = () =>
 
 export const shardConfig = () =>
   F.pipe(
-    sequenceT(O.option)(podIndex(), replicas()),
+    sequenceT(O.Apply)(podIndex(), replicas()),
     O.map(([index, replicas]) => {
       const perPod = shardsPerPod();
       const startIndex = index * perPod;
