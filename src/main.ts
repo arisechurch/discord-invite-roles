@@ -2,7 +2,6 @@ require("dotenv").config();
 
 import * as Topgg from "@top-gg/sdk";
 import { createClient, Intents } from "droff";
-import { SnowflakeMap } from "droff/dist/gateway-utils/resources";
 import { Guild, GuildMemberAddEvent, Role } from "droff/dist/types";
 import * as E from "fp-ts/Either";
 import * as F from "fp-ts/function";
@@ -53,26 +52,30 @@ async function main() {
 
   Invites.used$(client)
     .pipe(
-      RxO.flatMap(([member, invite]) =>
-        IR.addRolesFromInvite(client)(member, invite)(),
-      ),
       RxO.withLatestFrom(client.guilds$),
+      RxO.flatMap(async ([[member, invite], guilds]) => {
+        const guild = guilds.get(member.guild_id)!;
+        const result = await IR.addRolesFromInvite(client)(guild)(
+          member,
+          invite,
+        )();
+        return [result, guild] as const;
+      }),
     )
-    .subscribe(([result, guilds]) =>
+    .subscribe(([result, guild]) =>
       F.pipe(
         result,
         E.fold(
           (err) => console.log("[main]", "Error in `addRolesFromInvite`:", err),
-          (results) => results.forEach(logResult(guilds)),
+          (results) => results.forEach(logResult(guild)),
         ),
       ),
     );
 }
 
 const logResult =
-  (guilds: SnowflakeMap<Guild>) =>
+  (guild: Guild) =>
   ([member, role]: readonly [GuildMemberAddEvent, Role]) => {
-    const guild = guilds.get(member.guild_id)!;
     console.log(
       "[main]",
       `${guild.name} (${guild.id})`,

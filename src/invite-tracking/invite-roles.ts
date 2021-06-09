@@ -1,22 +1,26 @@
 import { Client } from "droff";
-import { GuildMemberAddEvent, Role } from "droff/dist/types";
+import { Guild, GuildMemberAddEvent, Role } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as TE from "fp-ts/TaskEither";
 import * as Channels from "./channels";
 import * as IT from "./invite-tracker";
 
+const guildSummary = (guild: Guild) => `${guild.name} (${guild.id})`;
+
 export const addRolesFromInvite =
-  (c: Client) => (member: GuildMemberAddEvent, invite: IT.TInviteSummary) =>
+  (c: Client) =>
+  (guild: Guild) =>
+  (member: GuildMemberAddEvent, invite: IT.TInviteSummary) =>
     F.pipe(
       sequenceT(TE.ApplyPar)(
         TE.tryCatch(
-          () => c.getGuildRoles(member.guild_id),
-          () => `Could not get roles for guild (${member.guild_id})`,
+          () => c.getGuildRoles(guild.id),
+          () => `Could not get roles for guild ${guildSummary(guild)}`,
         ),
         TE.tryCatch(
           () => c.getGuildChannels(member.guild_id),
-          () => `Could not get roles for guild (${member.guild_id})`,
+          () => `Could not get roles for guild ${guildSummary(guild)}`,
         ),
       ),
 
@@ -24,7 +28,12 @@ export const addRolesFromInvite =
         F.flow(
           ([roles, channels]) =>
             Channels.rolesFromTopic(channels, roles)(invite.channel),
-          TE.fromOption(() => "Could not extract roles from channel topic"),
+          TE.fromOption(
+            () =>
+              `Could not extract roles from channel topic (${guildSummary(
+                guild,
+              )})`,
+          ),
         ),
       ),
 
