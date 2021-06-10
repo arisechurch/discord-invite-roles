@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import * as Topgg from "@top-gg/sdk";
+import { Api as TopggClient } from "@top-gg/sdk";
 import { createClient, Intents } from "droff";
 import { Guild, GuildMemberAddEvent, Role } from "droff/dist/types";
 import * as E from "fp-ts/Either";
@@ -11,6 +11,7 @@ import * as RxO from "rxjs/operators";
 import * as IR from "./invite-tracking/invite-roles";
 import * as Invites from "./invite-tracking/invites";
 import * as K8s from "./k8s";
+import * as Topgg from "./topgg";
 
 async function main() {
   const shardConfig = F.pipe(
@@ -25,36 +26,40 @@ async function main() {
     token: process.env.DISCORD_BOT_TOKEN!,
     intents: Intents.GUILDS | Intents.GUILD_MEMBERS | Intents.GUILD_INVITES,
   });
-  const topgg = new Topgg.Api(process.env.TOPGG_TOKEN!);
+  const topgg = new TopggClient(process.env.TOPGG_TOKEN!);
+
+  Topgg.updateStats(topgg, client.guilds$).subscribe();
 
   // Debug on SIGUSR2
   Rx.fromEvent(process, "SIGUSR2")
     .pipe(RxO.first())
     .subscribe(() => {
-      client.gateway.shards.forEach((shard) => {
-        shard.raw$.subscribe(console.log);
-      });
+      client.gateway.raw$.subscribe(console.log);
     });
 
   // Post server count to top.gg every 60s or on change
   client.guilds$
     .pipe(
+      RxO.map((guilds) => guilds.count()),
+      RxO.distinctUntilChanged(),
       RxO.auditTime(60000),
-      RxO.flatMap((guilds) => {
-        const serverCount = guilds.count();
-        console.log("[main.ts]", "Updating top.gg server count:", serverCount);
-        return topgg.postStats({
+      RxO.tap((serverCount) =>
+        console.log("[main.ts]", "Updating top.gg server count:", serverCount),
+      ),
+      RxO.flatMap((serverCount) =>
+        topgg.postStats({
           serverCount,
-        });
-      }),
+        }),
+      ),
     )
     .subscribe();
 
   Invites.used$(client)
     .pipe(
-      RxO.withLatestFrom(client.guilds$),
-      RxO.flatMap(async ([[member, invite], guilds]) => {
-        const guild = guilds.get(member.guild_id)!;
+      client.withCaches({})(([member]) => member.guild_id),
+      client.onlyWithGuild(),
+
+      RxO.flatMap(async ([[member, invite], { guild }]) => {
         const result = await IR.addRolesFromInvite(client)(guild)(
           member,
           invite,
