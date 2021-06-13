@@ -22,9 +22,11 @@ async function main() {
   console.log("[main]", "Using shard config:", shardConfig);
 
   const client = createClient({
-    ...shardConfig,
     token: process.env.DISCORD_BOT_TOKEN!,
-    intents: Intents.GUILDS | Intents.GUILD_MEMBERS | Intents.GUILD_INVITES,
+    gateway: {
+      intents: Intents.GUILDS | Intents.GUILD_MEMBERS | Intents.GUILD_INVITES,
+      ...shardConfig,
+    },
   });
   const topgg = new TopggClient(process.env.TOPGG_TOKEN!);
 

@@ -1,5 +1,5 @@
 import * as Topgg from "@top-gg/sdk";
-import { SnowflakeMap } from "droff/dist/gateway-utils/resources";
+import { SnowflakeMap } from "droff/dist/caches/resources";
 import { Guild } from "droff/dist/types";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
