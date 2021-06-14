@@ -15,7 +15,9 @@ would add `[[Animal lover, Dog lover]]` to the channel topic.
 
 ## Requirements
 
-- You will need to make sure the bot has the `Administrator` permission.
+- You will need to make sure the bot has the View Channels, Manage Roles and
+  Manage Server permissions. It also asks for permission to create slash
+  commands, as we plan to add some commands in the future.
 - The bot role needs to be prioritized higher than any other roles you want to
   grant to new members.
 

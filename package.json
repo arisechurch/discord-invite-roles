@@ -18,7 +18,7 @@
     "@top-gg/sdk": "^3.1.1",
     "bufferutil": "^4.0.3",
     "dotenv": "^8.2.0",
-    "droff": "^0.15.0",
+    "droff": "^0.16.1",
     "fp-ts": "^2.10.5",
     "fp-ts-std": "^0.10.0",
     "immutable": "^4.0.0-rc.12",

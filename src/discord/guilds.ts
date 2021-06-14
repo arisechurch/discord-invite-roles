@@ -21,9 +21,9 @@ const guildFromInvite =
       ),
     );
 
-export const watchInvites$ = (c: Client) =>
+export const watchInvites = (c: Client) =>
   Rx.merge(
-    c.dispatch$("GUILD_CREATE"),
-    F.pipe(c.dispatch$("INVITE_CREATE"), RxO.flatMap(guildFromInvite(c))),
-    F.pipe(c.dispatch$("INVITE_DELETE"), RxO.flatMap(guildFromInvite(c))),
+    c.fromDispatch("GUILD_CREATE"),
+    F.pipe(c.fromDispatch("INVITE_CREATE"), RxO.flatMap(guildFromInvite(c))),
+    F.pipe(c.fromDispatch("INVITE_DELETE"), RxO.flatMap(guildFromInvite(c))),
   );

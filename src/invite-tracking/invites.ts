@@ -37,17 +37,17 @@ const memberUsedInvite =
 export const used$ = (client: Client) => {
   const inviteTracker = new IT.InviteTracker();
 
-  Guilds.watchInvites$(client).subscribe((guild) => {
+  Guilds.watchInvites(client).subscribe((guild) => {
     console.log("[invites]", "updating guild", guild.name);
     inviteTracker.next(IT.updateGuild(client)(guild.id));
   });
 
-  client.dispatch$("GUILD_DELETE").subscribe((guild) => {
+  client.fromDispatch("GUILD_DELETE").subscribe((guild) => {
     console.log("[invites]", "removing guild", guild.id);
     inviteTracker.next(IT.removeGuild(guild.id));
   });
 
-  return client.dispatch$("GUILD_MEMBER_ADD").pipe(
+  return client.fromDispatch("GUILD_MEMBER_ADD").pipe(
     RxO.flatMap((member) =>
       Rx.zip(Rx.of(member), memberUsedInvite(client)(inviteTracker)(member)),
     ),
