@@ -34,24 +34,36 @@ const memberUsedInvite =
     });
   };
 
-export const used$ = (client: Client) => {
+export const used = (client: Client) => {
   const inviteTracker = new IT.InviteTracker();
 
-  Guilds.watchInvites(client).subscribe((guild) => {
-    console.log("[invites]", "updating guild", guild.name);
-    inviteTracker.next(IT.updateGuild(client)(guild.id));
-  });
-
-  client.fromDispatch("GUILD_DELETE").subscribe((guild) => {
-    console.log("[invites]", "removing guild", guild.id);
-    inviteTracker.next(IT.removeGuild(guild.id));
-  });
-
-  return client.fromDispatch("GUILD_MEMBER_ADD").pipe(
-    RxO.flatMap((member) =>
-      Rx.zip(Rx.of(member), memberUsedInvite(client)(inviteTracker)(member)),
+  const effects$ = Rx.merge(
+    Guilds.watchInvites(client).pipe(
+      RxO.map((guild) => {
+        console.log("[invites]", "updating guild", guild.name);
+        return IT.updateGuild(client)(guild.id);
+      }),
     ),
-    RxO.filter(([_, invites]) => invites.count() === 1),
-    RxO.map(([member, invites]) => F.tuple(member, invites.get(0)!)),
+
+    client.fromDispatch("GUILD_DELETE").pipe(
+      RxO.map((guild) => {
+        console.log("[invites]", "removing guild", guild.id);
+        return IT.removeGuild(guild.id);
+      }),
+    ),
+  ).pipe(
+    RxO.tap(inviteTracker.next),
+    RxO.finalize(() => inviteTracker.complete()),
   );
+
+  return [
+    client.fromDispatch("GUILD_MEMBER_ADD").pipe(
+      RxO.flatMap((member) =>
+        Rx.zip(Rx.of(member), memberUsedInvite(client)(inviteTracker)(member)),
+      ),
+      RxO.filter(([_, invites]) => invites.count() === 1),
+      RxO.map(([member, invites]) => F.tuple(member, invites.get(0)!)),
+    ),
+    effects$,
+  ] as const;
 };

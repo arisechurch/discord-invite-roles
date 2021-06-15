@@ -30,8 +30,6 @@ async function main() {
   });
   const topgg = new TopggClient(process.env.TOPGG_TOKEN!);
 
-  Topgg.updateStats(topgg, client.guilds$).subscribe();
-
   // Debug on SIGUSR2
   Rx.fromEvent(process, "SIGUSR2")
     .pipe(RxO.first())
@@ -39,37 +37,20 @@ async function main() {
       client.gateway.raw$.subscribe(console.log);
     });
 
-  // Post server count to top.gg every 60s or on change
-  client.guilds$
-    .pipe(
-      RxO.map((guilds) => guilds.count()),
-      RxO.distinctUntilChanged(),
-      RxO.auditTime(60000),
-      RxO.tap((serverCount) =>
-        console.log("[main.ts]", "Updating top.gg server count:", serverCount),
-      ),
-      RxO.flatMap((serverCount) =>
-        topgg.postStats({
-          serverCount,
-        }),
-      ),
-    )
-    .subscribe();
+  const [invites$, inviteEffects$] = Invites.used(client);
+  const invitesToRoles$ = invites$.pipe(
+    client.withCaches({})(([member]) => member.guild_id),
+    client.onlyWithGuild(),
 
-  Invites.used$(client)
-    .pipe(
-      client.withCaches({})(([member]) => member.guild_id),
-      client.onlyWithGuild(),
+    RxO.flatMap(async ([[member, invite], { guild }]) => {
+      const result = await IR.addRolesFromInvite(client)(guild)(
+        member,
+        invite,
+      )();
+      return [result, guild] as const;
+    }),
 
-      RxO.flatMap(async ([[member, invite], { guild }]) => {
-        const result = await IR.addRolesFromInvite(client)(guild)(
-          member,
-          invite,
-        )();
-        return [result, guild] as const;
-      }),
-    )
-    .subscribe(([result, guild]) =>
+    RxO.tap(([result, guild]) =>
       F.pipe(
         result,
         E.fold(
@@ -77,7 +58,20 @@ async function main() {
           (results) => results.forEach(logResult(guild)),
         ),
       ),
-    );
+    ),
+  );
+
+  Rx.merge(
+    // Client
+    client.effects$,
+
+    // Top.gg
+    Topgg.updateStats(topgg, client.guilds$),
+
+    // Invites to roles
+    inviteEffects$,
+    invitesToRoles$,
+  ).subscribe();
 }
 
 const logResult =
