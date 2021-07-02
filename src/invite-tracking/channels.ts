@@ -13,7 +13,9 @@ export const rolesFromTopic =
         (roleNames) =>
           roleNames
             .map((name) =>
-              roles.find((r) => r.name.toLowerCase() === name.toLowerCase()),
+              roles.find((r) =>
+                [r.name.toLowerCase(), r.id].includes(name.toLowerCase()),
+              ),
             )
             .filter((r) => !!r) as Role[],
       ),
