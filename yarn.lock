@@ -310,9 +310,9 @@ dotenv@^10.0.0:
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 droff@^0.17.0:
-  version "0.17.9"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.17.9.tgz#62fd14834776470ff20aef78a6a52525176559c1"
-  integrity sha512-8h9ul7xS7NBIj0yeQdEqPgd5Kw0CnQkqdmf1PmPr0YD7SNGiwX+b0ROh40DLW3ptix1FlySIkITEsITIRCgUOQ==
+  version "0.17.10"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.17.10.tgz#05ce19982da389db52eff9724402aed1986b2925"
+  integrity sha512-z1ys38MCprCR+0X+noqngvBiw8GXcFeWk37S4FT0GayT81mAQvea8fAlEinohuiKCfqpEk1TCWbUP9DjWTqR/g==
   dependencies:
     axios "^0.21.1"
     fp-ts "^2.10.5"
