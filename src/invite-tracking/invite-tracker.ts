@@ -51,6 +51,6 @@ export const removeGuild =
 
 export class InviteTracker extends Bloc<State> {
   constructor() {
-    super(Map(), (a, b) => a === b);
+    super(Map() as State, (a, b) => a === b);
   }
 }
