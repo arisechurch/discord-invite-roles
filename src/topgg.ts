@@ -1,16 +1,15 @@
 import * as Topgg from "@top-gg/sdk";
-import { SnowflakeMap } from "droff/dist/caches/resources";
+import { ReadOnlyNonGuildCacheStore } from "droff/dist/caches/stores";
 import { Guild } from "droff/dist/types";
-import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
 
 // Post server count to top.gg every 60s or on change
 export const updateStats = (
   api: Topgg.Api,
-  guilds$: Rx.Observable<SnowflakeMap<Guild>>,
+  guildsCache: ReadOnlyNonGuildCacheStore<Guild>,
 ) =>
-  guilds$.pipe(
-    RxO.map((guilds) => guilds.count()),
+  guildsCache.watch$.pipe(
+    RxO.flatMap(() => guildsCache.size()),
     RxO.distinctUntilChanged(),
     RxO.auditTime(60000),
     RxO.tap((serverCount) =>

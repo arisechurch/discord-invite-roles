@@ -28,10 +28,14 @@ async function main() {
       client.gateway.raw$.subscribe(console.log);
     });
 
-  const [invites$, inviteEffects$] = Invites.used(client);
+  const [guildsCache, guildsCache$] = client.guildsCache();
+
+  const [invites$, inviteEffects$] = Invites.used(client, guildsCache);
   const invitesToRoles$ = invites$.pipe(
-    client.withCaches({})(([member]) => member.guild_id),
-    client.onlyWithGuild(),
+    client.withCaches({
+      guild: guildsCache.get,
+    })(([member]) => member.guild_id),
+    client.onlyWithCacheResults(),
 
     RxO.flatMap(async ([[member, invite], { guild }]) => {
       const result = await IR.addRolesFromInvite(client)(guild)(
@@ -55,9 +59,10 @@ async function main() {
   Rx.merge(
     // Client
     client.effects$,
+    guildsCache$,
 
     // Top.gg
-    Topgg.updateStats(topgg, client.guilds$),
+    Topgg.updateStats(topgg, guildsCache),
 
     // Invites to roles
     inviteEffects$,

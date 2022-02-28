@@ -32,11 +32,13 @@ export const updateGuild =
       RxO.flatMap((invites) => invites),
       RxO.reduce(
         (acc, invite) =>
-          acc.set(invite.code, {
-            code: invite.code,
-            uses: invite.uses,
-            channel: invite.channel.id,
-          }),
+          invite.channel
+            ? acc.set(invite.code, {
+                code: invite.code,
+                uses: invite.uses,
+                channel: invite.channel.id,
+              })
+            : acc,
         Map() as TInviteMap,
       ),
       (o) => Rx.lastValueFrom(o),

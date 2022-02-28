@@ -1,5 +1,6 @@
 import { Client } from "droff";
-import { GuildMemberAddEvent } from "droff/dist/types";
+import { ReadOnlyNonGuildCacheStore } from "droff/dist/caches/stores";
+import { Guild, GuildMemberAddEvent } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as O from "fp-ts/Option";
@@ -34,11 +35,14 @@ const memberUsedInvite =
     });
   };
 
-export const used = (client: Client) => {
+export const used = (
+  client: Client,
+  guildCache: ReadOnlyNonGuildCacheStore<Guild>,
+) => {
   const inviteTracker = new IT.InviteTracker();
 
   const effects$ = Rx.merge(
-    Guilds.watchInvites(client).pipe(
+    Guilds.watchInvites(client, guildCache).pipe(
       RxO.map((guild) => {
         console.log("[invites]", "updating guild", guild.name);
         return IT.updateGuild(client)(guild.id);

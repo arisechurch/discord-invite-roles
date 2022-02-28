@@ -1,29 +1,36 @@
 import { Client } from "droff";
-import { InviteCreateEvent } from "droff/dist/types";
+import { ReadOnlyNonGuildCacheStore } from "droff/dist/caches/stores";
+import { Guild, InviteCreateEvent } from "droff/dist/types";
 import * as F from "fp-ts/function";
-import * as O from "fp-ts/Option";
+import * as TO from "fp-ts/TaskOption";
 import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
+import { optionToObservable } from "../utils/option";
 
-const guildFromInvite =
-  (c: Client) => (invite: Pick<InviteCreateEvent, "guild_id">) =>
-    c.guilds$.pipe(
-      RxO.take(1),
-      RxO.flatMap((guilds) =>
-        F.pipe(
-          O.fromNullable(invite.guild_id),
-          O.chainNullableK((id) => guilds.get(id)),
-          O.fold(
-            () => Rx.EMPTY,
-            (guild) => Rx.of(guild),
-          ),
-        ),
-      ),
-    );
+const guildFromInvite = (
+  guildsCache: ReadOnlyNonGuildCacheStore<Guild>,
+  invite: Pick<InviteCreateEvent, "guild_id">,
+) =>
+  F.pipe(
+    TO.fromNullable(invite.guild_id),
+    TO.chain(TO.tryCatchK(guildsCache.get)),
+    TO.chain(TO.fromNullable),
+  );
 
-export const watchInvites = (c: Client) =>
+export const watchInvites = (
+  c: Client,
+  guildsCache: ReadOnlyNonGuildCacheStore<Guild>,
+) =>
   Rx.merge(
     c.fromDispatch("GUILD_CREATE"),
-    F.pipe(c.fromDispatch("INVITE_CREATE"), RxO.flatMap(guildFromInvite(c))),
-    F.pipe(c.fromDispatch("INVITE_DELETE"), RxO.flatMap(guildFromInvite(c))),
+    F.pipe(
+      c.fromDispatch("INVITE_CREATE"),
+      RxO.mergeMap((i) => guildFromInvite(guildsCache, i)()),
+      RxO.mergeMap(optionToObservable),
+    ),
+    F.pipe(
+      c.fromDispatch("INVITE_DELETE"),
+      RxO.mergeMap((i) => guildFromInvite(guildsCache, i)()),
+      RxO.mergeMap(optionToObservable),
+    ),
   );
