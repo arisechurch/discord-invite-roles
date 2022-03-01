@@ -410,10 +410,10 @@ dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
-droff@^0.20.1-alpha.4:
-  version "0.20.1-alpha.4"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.20.1-alpha.4.tgz#0213aaa060fffdd166d983cab2ebabce2e27488e"
-  integrity sha512-YVkzAvrJURsziTxzXGebEvQ/UspUD7567LItZSq/qdec5bS+PN+mgzQUFev9MAjK8Ix6MkNJ5PihUI9vqoZ7VA==
+droff@^0.20.1:
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.20.1.tgz#0ed1bfe5dc215c7268328617657aaf8c926c746b"
+  integrity sha512-2gwwUEEiRp1sFLLcfkmxHw4+AG06fjn8nMvWw0DNTBFKpaSACJz7hgFkNiYX6eRZW4J5pA4SvIYjf59JylVY6w==
   dependencies:
     axios "^0.26.0"
     fp-ts "^2.10.5"
@@ -426,6 +426,7 @@ droff@^0.20.1-alpha.4:
     ws "^8.2.2"
   optionalDependencies:
     bufferutil "^4.0.3"
+    utf-8-validate "^5.0.8"
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -892,7 +893,7 @@ node-fetch@^2.6.1:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.2.tgz#986996818b73785e47b1965cc34eb093a1d464d0"
   integrity sha512-aLoxToI6RfZ+0NOjmWAgn9+LEd30YCkJKFSyWacNZdEKTit/ZMcKjGkTRo8uWEsnIb/hfKecNPEbln02PdWbcA==
 
-node-gyp-build@^4.2.0:
+node-gyp-build@^4.2.0, node-gyp-build@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.3.0.tgz#9f256b03e5826150be39c764bf51e993946d71a3"
   integrity sha512-iWjXZvmboq0ja1pUGULQBexmxq8CV4xBhX7VDOTbL7ZR4FOowwY/VOtRxBN/yKxmdGoIp4j5ysNT4u3S2pDQ3Q==
@@ -1409,6 +1410,13 @@ url-parse-lax@^3.0.0:
   integrity sha1-FrXK/Afb42dsGxmZF3gj1lA6yww=
   dependencies:
     prepend-http "^2.0.0"
+
+utf-8-validate@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/utf-8-validate/-/utf-8-validate-5.0.8.tgz#4a735a61661dbb1c59a0868c397d2fe263f14e58"
+  integrity sha512-k4dW/Qja1BYDl2qD4tOMB9PFVha/UJtxTc1cXYOe3WwA/2m0Yn4qB7wLMpJyLJ/7DR0XnTut3HsCSzDT4ZvKgA==
+  dependencies:
+    node-gyp-build "^4.3.0"
 
 which@^2.0.1:
   version "2.0.2"
