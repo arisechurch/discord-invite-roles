@@ -16,7 +16,6 @@ async function main() {
     token: process.env.DISCORD_BOT_TOKEN!,
     gateway: {
       intents: Intents.GUILDS | Intents.GUILD_MEMBERS | Intents.GUILD_INVITES,
-      shardIDs: "auto",
     },
   });
   const topgg = new TopggClient(process.env.TOPGG_TOKEN!);

@@ -18,10 +18,10 @@
     "@top-gg/sdk": "^3.1.1",
     "bufferutil": "^4.0.3",
     "dotenv": "^10.0.0",
-    "droff": "^0.20.1",
+    "droff": "^0.21.0-alpha.3",
     "fp-ts": "^2.10.5",
     "fp-ts-std": "^0.10.0",
-    "immutable": "^4.0.0-rc.12",
+    "immutable": "^4.0.0",
     "rxjs": "^7.0.0"
   }
 }
