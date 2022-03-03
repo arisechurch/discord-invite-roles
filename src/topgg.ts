@@ -1,12 +1,12 @@
 import * as Topgg from "@top-gg/sdk";
-import { ReadOnlyNonParentCacheStore } from "droff/dist/caches/stores";
+import { NonParentCacheStoreWithHelpers } from "droff/dist/caches/stores";
 import { Guild } from "droff/dist/types";
 import * as RxO from "rxjs/operators";
 
 // Post server count to top.gg every 60s or on change
 export const updateStats = (
   api: Topgg.Api,
-  guildsCache: ReadOnlyNonParentCacheStore<Guild>,
+  guildsCache: NonParentCacheStoreWithHelpers<Guild>,
 ) =>
   guildsCache.watch$.pipe(
     RxO.flatMap(() => guildsCache.size()),

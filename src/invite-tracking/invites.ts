@@ -1,5 +1,5 @@
 import { Client } from "droff";
-import { ReadOnlyNonParentCacheStore } from "droff/dist/caches/stores";
+import { NonParentCacheStoreWithHelpers } from "droff/dist/caches/stores";
 import { Guild, GuildMemberAddEvent } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
@@ -37,7 +37,7 @@ const memberUsedInvite =
 
 export const used = (
   client: Client,
-  guildCache: ReadOnlyNonParentCacheStore<Guild>,
+  guildCache: NonParentCacheStoreWithHelpers<Guild>,
 ) => {
   const inviteTracker = new IT.InviteTracker();
 
