@@ -22,17 +22,22 @@ const memberUsedInvite =
   (client: Client) =>
   (tracker: IT.InviteTracker) =>
   async (member: GuildMemberAddEvent): Promise<List<IT.TInviteSummary>> => {
-    const before = O.fromNullable(tracker.value.get(member.guild_id));
+    let before: O.Option<IT.TInviteMap> = O.none;
 
-    return tracker.next(IT.updateGuild(client)(member.guild_id)).then(() => {
-      const after = O.fromNullable(tracker.value.get(member.guild_id));
+    return tracker
+      .next((bloc, add) => {
+        before = O.fromNullable(bloc.value.get(member.guild_id));
+        return IT.updateGuild(client)(member.guild_id)(bloc, add);
+      })
+      .then(() => {
+        const after = O.fromNullable(tracker.value.get(member.guild_id));
 
-      return F.pipe(
-        sequenceT(O.Apply)(before, after),
-        O.map(([before, after]) => usedInvites(before, after)),
-        O.getOrElse(() => List()),
-      );
-    });
+        return F.pipe(
+          sequenceT(O.Apply)(before, after),
+          O.map(([before, after]) => usedInvites(before, after)),
+          O.getOrElse(() => List()),
+        );
+      });
   };
 
 export const used = (
