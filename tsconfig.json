@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
+    "sourceMap": true,
     "lib": ["ESNext"],
     "target": "es2018",
     "moduleResolution": "node",
