@@ -1,5 +1,5 @@
 import { Client } from "droff";
-import { NonParentCacheStoreWithHelpers } from "droff/dist/caches/stores";
+import { NonParentCacheStoreHelpers } from "droff/dist/caches/stores";
 import { Guild, InviteCreateEvent } from "droff/dist/types";
 import * as F from "fp-ts/function";
 import * as TO from "fp-ts/TaskOption";
@@ -9,7 +9,7 @@ import { optionToObservable } from "../utils/option";
 
 const guildFromInvite = (
   client: Client,
-  guildsCache: NonParentCacheStoreWithHelpers<Guild>,
+  guildsCache: NonParentCacheStoreHelpers<Guild>,
   invite: Pick<InviteCreateEvent, "guild_id">,
 ) =>
   F.pipe(
@@ -20,7 +20,7 @@ const guildFromInvite = (
 
 export const watchInvites = (
   c: Client,
-  guildsCache: NonParentCacheStoreWithHelpers<Guild>,
+  guildsCache: NonParentCacheStoreHelpers<Guild>,
 ) =>
   Rx.merge(
     c.fromDispatch("GUILD_CREATE"),
