@@ -1,6 +1,6 @@
 import { Bloc } from "@bloc-js/bloc";
 import { Client } from "droff";
-import { Invite, InviteMetadatum, Snowflake } from "droff/dist/types";
+import { Invite, InviteMetadatum, Snowflake } from "droff/types";
 import * as F from "fp-ts/function";
 import { Map } from "immutable";
 import * as Rx from "rxjs";

@@ -1,6 +1,6 @@
 import { Client } from "droff";
-import { NonParentCacheStoreHelpers } from "droff/dist/caches/stores";
-import { Guild, GuildMemberAddEvent } from "droff/dist/types";
+import { NonParentCacheStoreHelpers } from "droff/caches/stores";
+import { Guild, GuildMemberAddEvent } from "droff/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as O from "fp-ts/Option";

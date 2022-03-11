@@ -1,4 +1,4 @@
-import { Channel, Role } from "droff/dist/types";
+import { Channel, Role } from "droff/types";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 

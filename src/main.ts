@@ -2,7 +2,7 @@ require("dotenv").config();
 
 import { Api as TopggClient } from "@top-gg/sdk";
 import { createClient, Intents } from "droff";
-import { Guild, GuildMemberAddEvent, Role } from "droff/dist/types";
+import { Guild, GuildMemberAddEvent, Role } from "droff/types";
 import * as E from "fp-ts/Either";
 import * as F from "fp-ts/function";
 import * as Rx from "rxjs";

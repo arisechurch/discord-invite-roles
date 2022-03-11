@@ -2,8 +2,8 @@ import * as Topgg from "@top-gg/sdk";
 import {
   NonParentCacheStore,
   NonParentCacheStoreHelpers,
-} from "droff/dist/caches/stores";
-import { Guild } from "droff/dist/types";
+} from "droff/caches/stores";
+import { Guild } from "droff/types";
 import * as RxO from "rxjs/operators";
 
 // Post server count to top.gg every 60s or on change

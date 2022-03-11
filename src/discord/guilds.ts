@@ -1,6 +1,6 @@
 import { Client } from "droff";
-import { NonParentCacheStoreHelpers } from "droff/dist/caches/stores";
-import { Guild, InviteCreateEvent } from "droff/dist/types";
+import { NonParentCacheStoreHelpers } from "droff/caches/stores";
+import { Guild, InviteCreateEvent } from "droff/types";
 import * as F from "fp-ts/function";
 import * as TO from "fp-ts/TaskOption";
 import * as Rx from "rxjs";

@@ -1,5 +1,5 @@
 import { Client } from "droff";
-import { Guild, GuildMemberAddEvent, Role } from "droff/dist/types";
+import { Guild, GuildMemberAddEvent, Role } from "droff/types";
 import * as F from "fp-ts/function";
 import { sequenceT } from "fp-ts/lib/Apply";
 import * as TE from "fp-ts/TaskEither";

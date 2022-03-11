@@ -1,4 +1,4 @@
-import { Guild, Snowflake } from "droff/dist/types";
+import { Guild, Snowflake } from "droff/types";
 import * as F from "fp-ts/function";
 import * as O from "fp-ts/Option";
 import { Map } from "immutable";
