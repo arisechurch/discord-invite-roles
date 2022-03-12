@@ -9,6 +9,7 @@ import * as Rx from "rxjs";
 import * as RxO from "rxjs/operators";
 import * as IR from "./invite-tracking/invite-roles";
 import * as Invites from "./invite-tracking/invites";
+import * as Repl from "./repl";
 import * as Topgg from "./topgg";
 
 async function main() {
@@ -67,6 +68,12 @@ async function main() {
     inviteEffects$,
     invitesToRoles$,
   ).subscribe();
+
+  // REPL
+  Repl.create({
+    client,
+    guildsCache,
+  }).listen(5001);
 }
 
 const logResult =

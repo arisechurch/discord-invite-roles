@@ -24,6 +24,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+RUN apk add -U --no-cache socat rlwrap
+
 COPY --from=builder /app/dist ./dist
 COPY --from=deps /app/node_modules ./node_modules
 
