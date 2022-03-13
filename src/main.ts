@@ -73,6 +73,8 @@ async function main() {
   Repl.create({
     client,
     guildsCache,
+    Rx,
+    RxO,
   }).listen(5001);
 }
 
