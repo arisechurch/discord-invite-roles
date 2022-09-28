@@ -13,6 +13,15 @@
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/app",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    },
+    {
+      "name": "Launch",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": ["src/main.ts"],
+      "cwd": "${workspaceRoot}"
     }
   ]
 }
