@@ -205,10 +205,10 @@ dotenv@^16.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
-droff@^0.38.1:
-  version "0.38.1"
-  resolved "https://registry.yarnpkg.com/droff/-/droff-0.38.1.tgz#bbe7b36e38179a808f52855aec568f828a59c2f2"
-  integrity sha512-BRGsGdhUdYX0tC+rrW5ygnCH6366KDXRs5JHuKT6I6/W5+wK5xLJd8lV83DqlYHCWvphMqmjirq0AddECPM0wA==
+droff@^0.39.1:
+  version "0.39.1"
+  resolved "https://registry.yarnpkg.com/droff/-/droff-0.39.1.tgz#b0afd54ad1c8fcdb9768fd54ceb8f271dabe7d9e"
+  integrity sha512-rIrgPWhtZLuGfacimalB3e8my/2Fer7SwXwulLzB1CYfgSHXMPVsKLdixryWM5ZtiarDSRW+wWS2wZ3Aui/UlQ==
   dependencies:
     axios "^0.27.2"
     fp-ts "^2.10.5"
