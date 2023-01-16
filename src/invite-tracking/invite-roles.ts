@@ -42,14 +42,13 @@ export const addRolesFromInvite =
 
 const addRoles =
   (c: Client) => (member: GuildMemberAddEvent) => (roles: Role[]) =>
-    TE.tryCatch(
-      () =>
-        Promise.all(
-          roles.map((role) =>
-            c
-              .addGuildMemberRole(member.guild_id, member.user!.id, role.id)
-              .then(() => [member, role] as const),
-          ),
-        ),
-      (err) => `Could not add roles to member: ${err}`,
-    );
+    TE.sequenceSeqArray(roles.map(addRole(c)(member)));
+
+const addRole = (c: Client) => (member: GuildMemberAddEvent) => (role: Role) =>
+  TE.tryCatch(
+    () =>
+      c
+        .addGuildMemberRole(member.guild_id, member.user!.id, role.id)
+        .then(() => [member, role] as const),
+    (err) => `Could not add roles to member: ${err}`,
+  );
